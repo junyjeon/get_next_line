@@ -6,44 +6,40 @@
 /*   By: junyojeo <junyojeo@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/30 17:43:40 by junyojeo          #+#    #+#             */
-/*   Updated: 2022/08/04 21:59:41 by junyojeo         ###   ########seoul.kr  */
+/*   Updated: 2022/08/08 20:05:41 by junyojeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+// "12345n6n89" -> "123" "45n" + "6n8"
+// "000000n000" -> "6789000000n" + "000"
+#include <stdio.h>
 #include "get_next_line.h"
 
-char	**ft_free(char **all)
+char	*ft_strchr(const char *s, int c)
 {
-	size_t	i;
-
-	i = 0;
-	while (all[i])
+	while (*s)
 	{
-		free(all[i]);
-		all[i] = 0;
+		if (*s == (unsigned char)c)
+			return ((char *)s);
+		s++;
 	}
-	return (all);
+	if (*s == (unsigned char)c)
+		return ((char *)s);
+	return (NULL);
 }
 
 char	*get_next_line(int fd)
 {
 	size_t		i;
-	size_t		j;
-	size_t		size;
-	static char	*backup[OPEN_MAX + 1];
+	int			size;
+	static char	*backup[OPEN_MAX];
 	char		buf[BUFFER_SIZE + 1];
 	char		*line;
 	char		*tmp;
 
-	// "12345n6n89" -> "123" "45n" + "6n8"
-	// "000000n000" -> "6789000000n" + "000"
 	if (BUFFER_SIZE <= 0 || OPEN_MAX < fd || fd < 0)
 		return (0);
-	buf = malloc(sizeof(char) * BUFFER_SIZE + 1);
-	if (!buf)
-		return (0);
-	size = 1;
-	while (0 < )
+	while (!backup[fd] || !(ft_strchr(backup[fd], '\n')))
 	{
 		size = read(fd, buf, BUFFER_SIZE);
 		if (size == -1)
@@ -54,51 +50,62 @@ char	*get_next_line(int fd)
 		if (!backup[fd])
 			backup[fd] = ft_strdup("");
 		tmp = backup[fd];
+		backup[fd] = ft_strjoin(tmp, buf);
 		free (tmp);
-		tmp = NULL;
-		if (ft_strchr(buf, "\n"));
-			break;
-		// i = 0;
-		// j = 0;
-		// buf = ft_strjoin()
-		// while (backup[fd][i])
-		// {
-		// 	if (backup[fd][i] == '\n')
-		// 	{
-		// 		backup[fd][i + 1] = '\0';
-		// 		line[j] = ft_strdup(backup[fd]);
-		// 		if (!line[j])
-		// 			return (backup[fd]);
-		// 		tmp = ft_strdup(backup[fd]);
-		// 		free(backup[fd]);
-		// 		backup[fd] = tmp;
-		// 		i++;
-		// 		j++;
-		// 		break ;
-		// 	}
-		// 	else
-		// 		i++;
-		// }
+		tmp = 0; 
+		if (ft_strchr(buf, '\n'))
+			break ;
 	}
-
-	
-
+	if (!backup[fd] || backup[fd][0] == '\0')
+	{
+		if (backup[fd] && backup[fd][0] == '\0')
+		{
+			free(backup[fd]);
+			backup[fd] = 0;
+		}
+		return (NULL);
+	}
+	// printf("backup:1 (%s)\n", backup[fd]);
+	i = 0;
+	while (backup[fd][i] != '\n' && backup[fd][i])
+		i++;
+	line = malloc(sizeof(char) * i + 2);
+	ft_memcpy(line, backup[fd], i + 1);
+	line[i + 1] = '\0';
+	if (!backup[fd][i])
+	{
+		free(backup[fd]);
+		backup[fd] = 0;
+		return (line);
+	}
+	tmp = backup[fd];
+	backup[fd] = ft_substr(backup[fd], i + 1, ft_strlen(backup[fd]) - i);
+	// printf("[back : %s]\n", backup[fd]);
+	free(tmp);
+	tmp = 0;
+	// printf("line: (%s)\n", line);
 	return (line);
 }
 
-// int main(void)
+// #include <unistd.h>
+// #include <fcntl.h>
+
+// int main()
 // {
-// 	char *str = "asd";
-// 	int fd = open("./text.txt");
-// 	while (str == NULL)
+// 	int fd = open("./test.txt", O_RDONLY);
+	
+// 	int i = 0;
+// 	char *str;
+// 	while (i < 9)
 // 	{
 // 		str = get_next_line(fd);
-// 		printf(str);
+// 		printf("%d :[%s]", i + 1, str);
+// 		i++;
 // 	}
-// 	close(fd);
-// 	while(1)
-// 	{
-		
-// 	}
-// 	return (0);
 // }
+// "aa" + "ab" + "\nb"
+
+
+
+// backup = "aaab\nb" -> line = "aaa\n"
+// 				   -> backup = "b"
