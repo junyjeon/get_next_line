@@ -6,14 +6,14 @@
 /*   By: junyojeo <junyojeo@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/30 17:44:50 by junyojeo          #+#    #+#             */
-/*   Updated: 2022/08/09 21:50:00 by junyojeo         ###   ########.fr       */
+/*   Updated: 2022/08/10 02:48:33 by junyojeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
 size_t	ft_strlen(const char *str)
-{
+{	
 	size_t	i;
 
 	i = 0;
@@ -101,7 +101,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	int		j;
 
 	src_len = (ft_strlen(s1) + ft_strlen(s2));
-	str = (char *)malloc(sizeof(char *) * (src_len + 1));
+	str = (char *)malloc(sizeof(char) * (src_len + 1));
 	if (str == NULL)
 		return (0);
 	i = 0;

@@ -6,14 +6,12 @@
 /*   By: junyojeo <junyojeo@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/30 17:43:40 by junyojeo          #+#    #+#             */
-/*   Updated: 2022/08/09 22:55:44 by junyojeo         ###   ########.fr       */
+/*   Updated: 2022/08/10 02:56:26 by junyojeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-// "12345n6n89" -> "123" "45n" + "6n8"
-// "000000n000" -> "6789000000n" + "000"
 #include "get_next_line.h"
-
+#include <stdio.h>
 char	*get_next_line(int fd)
 {
 	int			read_size;
@@ -25,20 +23,26 @@ char	*get_next_line(int fd)
 
 	if (BUFFER_SIZE <= 0 || fd < 0)
 		return (0);
-	buf = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
+	buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buf)
 		return (NULL);
-	read_size = 1;
-	while (read_size)
+	while (1)
 	{
 		read_size = read(fd, buf, BUFFER_SIZE);
 		if (read_size == -1)
+		{
+			free(buf);
+			buf = 0;
 			return (NULL);
+		}
 		else if (read_size == 0)
 			break ;
 		buf[read_size] = '\0';
 		if (!backup[fd])
+		{
 			backup[fd] = ft_strdup("");
+			backup[fd][0] = '\0';
+		}
 		tmp = backup[fd];
 		backup[fd] = ft_strjoin(tmp, buf);
 		free(tmp);
@@ -59,19 +63,16 @@ char	*get_next_line(int fd)
 		i++;
 	if (backup[fd][i] == '\n')
 		i++;
-	line = (char *)malloc(sizeof(char) * i + 1);
-	if (!line) 
-		return (NULL);
-	ft_memcpy(line, backup[fd], i);
-	line[i] = '\0';
-	if (!backup[fd][i]) ///case EOF
+	line = ft_substr(backup[fd], 0, i);
+	if (!backup[fd][i])
 	{
 		free(backup[fd]);
 		backup[fd] = 0;
 		return (line);
 	}
 	tmp = backup[fd];
-	backup[fd] = ft_substr(tmp, i , ft_strlen(backup[fd]) - i);
+	int len = ft_strlen(backup[fd]);
+	backup[fd] = ft_substr(tmp, i, len - i);
 	free(tmp);
 	tmp = 0;
 	return (line);
@@ -83,20 +84,30 @@ char	*get_next_line(int fd)
 
 // int main()
 // {
-// 	int fd = open("./test.txt", O_RDONLY);
+// 	// int fd = open("./test2.txt", O_RDONLY);
+// 	int fd;
 
 // 	int i = 0;
 // 	char *str;
-// 	while (i < 9)
+// 	// while (i < 1)
+// 	// {
+// 	// 	str = get_next_line(fd);
+// 	// 	printf("%d :[%s]", i + 1, str);
+// 	// 	i++;
+// 	// }
+// 	fd = open("./test.txt", O_RDONLY);
+	
+// 	while ((str = get_next_line(fd)) != NULL)
 // 	{
-// 		str = get_next_line(fd);
-// 		printf("%d :[%s]", i + 1, str);
-// 		i++;
-// 	}
+// 		printf("%s", str);
+// 	}	
+// 	// system("LEAKS a.out");
 // }
+
 // "aa" + "ab" + "\nb"
 
-
+// "12345n6n89" -> "123" "45n" + "6n8"
+// "000000n000" -> "6789000000n" + "000"
 
 // backup = "aaab\nb" -> line = "aaa\n"
 // 				   -> backup = "b"
