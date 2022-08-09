@@ -6,70 +6,84 @@
 /*   By: junyojeo <junyojeo@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/30 17:43:40 by junyojeo          #+#    #+#             */
-/*   Updated: 2022/08/10 03:00:42 by junyojeo         ###   ########.fr       */
+/*   Updated: 2022/08/10 05:08:33 by junyojeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
+char	*ft_1(int fd, int read_size, char *buf, char **save)
+{
+	char		*tmp;
+
+	while (1)
+	{
+		read_size = read(fd, buf, BUFFER_SIZE);
+		if (read_size == -1)
+			return (NULL);
+		else if (read_size == 0)
+			break ;
+		buf[read_size] = '\0';
+		if (!save[fd])
+		{
+			save[fd] = ft_strdup("");
+			save[fd][0] = '\0';
+		}
+		tmp = save[fd];
+		save[fd] = ft_strjoin(tmp, buf);
+		free(tmp);
+		if (ft_strchr(buf, '\n'))
+			break ;
+	}
+	return (save[fd]);
+}
+
+char	*ft_2(int fd, char **save, char *line)
+{
+	int			i;
+	char		*tmp;
+
+	if (!save[fd] || save[fd][0] == '\0')
+	{
+		free(save[fd]);
+		save[fd] = 0;
+		return (NULL);
+	}
+	i = 0;
+	while (save[fd][i] != '\n' && save[fd][i])
+		i++;
+	if (save[fd][i] == '\n')
+		i++;
+	line = ft_substr(save[fd], 0, i);
+	if (!save[fd][i])
+	{
+		free(save[fd]);
+		save[fd] = 0;
+		return (line);
+	}
+	tmp = save[fd];
+	save[fd] = ft_substr(tmp, i, ft_strlen(save[fd]) - i);
+	free(tmp);
+	return (line);
+}
+
 char	*get_next_line(int fd)
 {
 	int			read_size;
-	size_t		i;
-	static char	*backup[OPEN_MAX];
+	static char	*save[OPEN_MAX];
 	char		*buf;
 	char		*line;
-	char		*tmp;
 
+	line = NULL;
+	read_size = 0;
 	if (BUFFER_SIZE <= 0 || fd < 0)
 		return (0);
 	buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buf)
 		return (NULL);
-	while (1)
-	{
-		read_size = read(fd, buf, BUFFER_SIZE);
-		if (read_size == -1)
-		{
-			free(buf);
-			return (NULL);
-		}
-		else if (read_size == 0)
-			break ;
-		buf[read_size] = '\0';
-		if (!backup[fd])
-		{
-			backup[fd] = ft_strdup("");
-			backup[fd][0] = '\0';
-		}
-		tmp = backup[fd];
-		backup[fd] = ft_strjoin(tmp, buf);
-		free(tmp);
-		if (ft_strchr(buf, '\n'))
-			break ;
-	}
+	save[fd] = ft_1(fd, read_size, buf, save);
 	free(buf);
-	if (!backup[fd] || backup[fd][0] == '\0')
-	{
-		free(backup[fd]);
-		backup[fd] = 0;
-		return (NULL);
-	}
-	i = 0;
-	while (backup[fd][i] != '\n' && backup[fd][i])
-		i++;
-	if (backup[fd][i] == '\n')
-		i++;
-	line = ft_substr(backup[fd], 0, i);
-	if (!backup[fd][i])
-	{
-		free(backup[fd]);
-		backup[fd] = 0;
-		return (line);
-	}
-	tmp = backup[fd];
-	backup[fd] = ft_substr(tmp, i, ft_strlen(backup[fd]) - i);
-	free(tmp);
+	line = ft_2(fd, save, line);
 	return (line);
 }
 
@@ -91,7 +105,7 @@ char	*get_next_line(int fd)
 // 	// 	i++;
 // 	// }
 // 	fd = open("./test.txt", O_RDONLY);
-	
+
 // 	while ((str = get_next_line(fd)) != NULL)
 // 	{
 // 		printf("%s", str);
