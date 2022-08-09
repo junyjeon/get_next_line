@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*   get_next_line_utils_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: junyojeo <junyojeo@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/30 17:44:50 by junyojeo          #+#    #+#             */
-/*   Updated: 2022/08/10 05:30:09 by junyojeo         ###   ########.fr       */
+/*   Updated: 2022/08/10 05:30:01 by junyojeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	if (start >= s_len)
 		return (ft_strdup(""));
 	i = 0;
-	while (s[start + i] && i < len)
+	while (i < len && s[start + i])
 		i++;
 	str = (char *)malloc(sizeof(char) * (i + 1));
 	if (!str)

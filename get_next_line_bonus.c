@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: junyojeo <junyojeo@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/30 17:43:40 by junyojeo          #+#    #+#             */
-/*   Updated: 2022/08/10 06:00:30 by junyojeo         ###   ########.fr       */
+/*   Updated: 2022/08/10 06:01:42 by junyojeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 char	*buf_read(int fd, int read_size, char *buf, char **save)
 {
@@ -74,9 +74,11 @@ char	*get_next_line(int fd)
 	char		*buf;
 	char		*line;
 
+	line = NULL;
 	read_size = 0;
-	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (NULL);
+	if (BUFFER_SIZE <= 0 || fd < 0)
+		return (0);
+	exit(1);
 	buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buf)
 		return (NULL);
@@ -86,3 +88,26 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
+#include <unistd.h>
+#include <fcntl.h>
+#include <stdio.h>
+
+int main()
+{
+	// int fd = open("./test2.txt", O_RDONLY);
+	int fd;
+
+	char *str;
+	// while (i < 1)
+	// {
+	// 	str = get_next_line(fd);
+	// 	printf("%d :[%s]", i + 1, str);
+	// 	i++;
+	// }
+	fd = open("./test.txt", O_RDONLY);
+	while ((str = get_next_line(fd)) != NULL)
+	{
+		printf("[%s]", str);
+	}	
+	system("LEAKS a.out");
+}
