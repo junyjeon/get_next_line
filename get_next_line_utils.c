@@ -6,7 +6,7 @@
 /*   By: junyojeo <junyojeo@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/30 17:44:50 by junyojeo          #+#    #+#             */
-/*   Updated: 2022/08/08 19:08:52 by junyojeo         ###   ########.fr       */
+/*   Updated: 2022/08/09 21:50:00 by junyojeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,19 @@ size_t	ft_strlen(const char *str)
 	return (i);
 }
 
+char	*ft_strchr(const char *s, int c)
+{
+	while (*s)
+	{
+		if (*s == (unsigned char)c)
+			return ((char *)s);
+		s++;
+	}
+	if (*s == (unsigned char)c)
+		return ((char *)s);
+	return (NULL);
+}
+
 void	*ft_memcpy(void *dest, const void *src, size_t n)
 {
 	char	*s;
@@ -34,6 +47,25 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	while (n-- > 0)
 		*(d++) = *(s++);
 	return (dest);
+}
+
+char	*ft_strdup(const char *s1)
+{
+	size_t	s_len;
+	char	*dst;
+
+	if (!(*s1))
+	{
+		dst = (char *)malloc(sizeof(char) * 1);
+		return (dst);
+	}
+	s_len = ft_strlen(s1);
+	dst = (char *)malloc(sizeof(char) * s_len + 1);
+	if (!dst)
+		return (0);
+	ft_memcpy(dst, s1, s_len);
+	dst[s_len] = '\0';
+	return (dst);
 }
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
@@ -59,25 +91,6 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	}
 	str[i] = '\0';
 	return (str);
-}
-
-char	*ft_strdup(const char *s1)
-{
-	size_t	s_len;
-	char	*dst;
-
-	if (!(*s1))
-	{
-		dst = (char *)malloc(sizeof(char) * 1);
-		return (dst);
-	}
-	s_len = ft_strlen(s1);
-	dst = (char *)malloc(sizeof(char) * s_len + 1);
-	if (!dst)
-		return (0);
-	ft_memcpy(dst, s1, s_len);
-	dst[s_len] = '\0';
-	return (dst);
 }
 
 char	*ft_strjoin(char const *s1, char const *s2)
