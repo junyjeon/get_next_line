@@ -6,12 +6,12 @@
 /*   By: junyojeo <junyojeo@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/30 17:43:40 by junyojeo          #+#    #+#             */
-/*   Updated: 2022/08/10 02:56:26 by junyojeo         ###   ########.fr       */
+/*   Updated: 2022/08/10 03:00:42 by junyojeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
+
 char	*get_next_line(int fd)
 {
 	int			read_size;
@@ -32,7 +32,6 @@ char	*get_next_line(int fd)
 		if (read_size == -1)
 		{
 			free(buf);
-			buf = 0;
 			return (NULL);
 		}
 		else if (read_size == 0)
@@ -46,12 +45,10 @@ char	*get_next_line(int fd)
 		tmp = backup[fd];
 		backup[fd] = ft_strjoin(tmp, buf);
 		free(tmp);
-		tmp = 0;
 		if (ft_strchr(buf, '\n'))
 			break ;
 	}
 	free(buf);
-	buf = 0;
 	if (!backup[fd] || backup[fd][0] == '\0')
 	{
 		free(backup[fd]);
@@ -71,10 +68,8 @@ char	*get_next_line(int fd)
 		return (line);
 	}
 	tmp = backup[fd];
-	int len = ft_strlen(backup[fd]);
-	backup[fd] = ft_substr(tmp, i, len - i);
+	backup[fd] = ft_substr(tmp, i, ft_strlen(backup[fd]) - i);
 	free(tmp);
-	tmp = 0;
 	return (line);
 }
 
