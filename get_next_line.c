@@ -6,7 +6,7 @@
 /*   By: junyojeo <junyojeo@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/30 17:43:40 by junyojeo          #+#    #+#             */
-/*   Updated: 2022/08/10 06:00:30 by junyojeo         ###   ########.fr       */
+/*   Updated: 2022/08/10 20:23:17 by junyojeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,6 +75,7 @@ char	*get_next_line(int fd)
 	char		*line;
 
 	read_size = 0;
+	line = NULL;
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
@@ -85,4 +86,3 @@ char	*get_next_line(int fd)
 	line = set_line_and_save(fd, save, line);
 	return (line);
 }
-

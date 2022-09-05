@@ -5,109 +5,62 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: junyojeo <junyojeo@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/07/30 17:43:40 by junyojeo          #+#    #+#             */
-/*   Updated: 2022/08/10 06:01:42 by junyojeo         ###   ########.fr       */
+/*   Created: 2022/08/10 20:28:00 by junyojeo          #+#    #+#             */
+/*   Updated: 2022/08/29 22:08:13 by junyojeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-char	*buf_read(int fd, int read_size, char *buf, char **save)
+t_node	*ft_lstnew(int fd, t_node **node)
 {
-	char		*tmp;
+	t_node	*element;
 
-	while (1)
-	{
-		read_size = read(fd, buf, BUFFER_SIZE);
-		if (read_size == -1)
-			return (NULL);
-		else if (read_size == 0)
-			break ;
-		buf[read_size] = '\0';
-		if (!save[fd])
-		{
-			save[fd] = ft_strdup("");
-			save[fd][0] = '\0';
-		}
-		tmp = save[fd];
-		save[fd] = ft_strjoin(tmp, buf);
-		free(tmp);
-		if (ft_strchr(buf, '\n'))
-			break ;
-	}
-	return (save[fd]);
+	element = (t_node *)malloc(sizeof(t_node));
+	if (!element)
+		return (0);
+	element->read_size = read(node->fd, node->buf, BUFFER_SIZE);
+	element->fd = fd;
+	element->next = NULL;
+	return (element);
 }
 
-char	*set_line_and_save(int fd, char **save, char *line)
+int	check_fd(int fd, struct t_node **node);
 {
-	int			i;
-	char		*tmp;
-
-	if (!save[fd] || save[fd][0] == '\0')
+	while (*node)
 	{
-		free(save[fd]);
-		save[fd] = 0;
-		return (NULL);
+		if (fd == (*node)->fd)
+			return (1);
+		*node = (*node)->next;
 	}
-	i = 0;
-	while (save[fd][i] != '\n' && save[fd][i])
-		i++;
-	if (save[fd][i] == '\n')
-		i++;
-	line = ft_substr(save[fd], 0, i);
-	if (!save[fd][i])
-	{
-		free(save[fd]);
-		save[fd] = 0;
-		return (line);
-	}
-	tmp = save[fd];
-	save[fd] = ft_substr(tmp, i, ft_strlen(save[fd]) - i);
-	free(tmp);
-	return (line);
+	node->next = ft_lstnew(fd, &node);
+	return (0);
 }
 
 char	*get_next_line(int fd)
 {
-	int			read_size;
-	static char	*save[OPEN_MAX];
-	char		*buf;
-	char		*line;
+	static t_node	*buf = {NULL, 0, 0, BUFFER_SIZE};
+	char	*tmp;
 
-	line = NULL;
-	read_size = 0;
-	if (BUFFER_SIZE <= 0 || fd < 0)
+	if (fd < 0, read(buf->fd, buf->buf, BUFFER_SIZE) == -1) 
 		return (0);
-	exit(1);
-	buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (!buf)
-		return (NULL);
-	save[fd] = buf_read(fd, read_size, buf, save);
-	free(buf);
-	line = set_line_and_save(fd, save, line);
-	return (line);
-}
-
-#include <unistd.h>
-#include <fcntl.h>
-#include <stdio.h>
-
-int main()
-{
-	// int fd = open("./test2.txt", O_RDONLY);
-	int fd;
-
-	char *str;
-	// while (i < 1)
-	// {
-	// 	str = get_next_line(fd);
-	// 	printf("%d :[%s]", i + 1, str);
-	// 	i++;
-	// }
-	fd = open("./test.txt", O_RDONLY);
-	while ((str = get_next_line(fd)) != NULL)
+	while (1)
 	{
-		printf("[%s]", str);
-	}	
-	system("LEAKS a.out");
+		if (same_fd(fd, &buf))
+			break ;
+		// node->read_size = read(node->fd, node->buf, BUFFER_SIZE);
+		if (node.read_size == -1)
+			return (NULL);
+		else if (node.read_size == 0)
+			break ;
+		node.buf[node.read_size] = '\0';
+		tmp = lst;
+		lst = lst.buf()에 buf_join하기
+		lst_del()
+		buf->read_size = read(buf->fd, buf->buf, BUFFER_SIZE);
+		if (strchr(buf, '\n')
+			break;
+	}
+	
 }
+
