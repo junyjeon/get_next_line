@@ -6,17 +6,16 @@
 /*   By: junyojeo <junyojeo@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/10 20:28:00 by junyojeo          #+#    #+#             */
-/*   Updated: 2022/09/05 17:49:40 by junyojeo         ###   ########.fr       */
+/*   Updated: 2022/09/05 18:05:28 by junyojeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-char	*output_line(int fd, t_node *buf)
+char	*output_line(int fd, t_node *buf, char *line)
 {
 	int		i;
-	t_node	*tmp;
-	char *line
+	char	*tmp;
 	
 	if (!buf->buf || buf->buf[0] == '\0')
 	{
@@ -29,7 +28,19 @@ char	*output_line(int fd, t_node *buf)
 		i++;
 	if (buf-buf[i] == '\n')
 		i++;
-	line	ft_substr(buf->buf, 0, i);
+	line = ft_substr(buf->buf, 0, i);
+	if (!buf->buf[i])
+	{
+		free(buf->buf);
+		buf->buf = 0;
+		return (line);
+	}
+	tmp = buf;
+	buf->next = ft_lstnew(fd, buf);
+	buf = buf->next;
+	lst_del(tmp);
+	buf->buf = ft_substr(tmp, i, ft_strlen(buf->buf) - i);
+	return (line);
 }
 
 t_node	*ft_lstnew(int fd, t_node *node)
@@ -59,6 +70,7 @@ char	*get_next_line(int fd)
 {
 	static t_node	*buf = {.next = NULL};
 	t_node			*tmp;
+	char			*line;
 
 	if (fd < 0)
 		return (0);
@@ -83,7 +95,7 @@ char	*get_next_line(int fd)
 			break;
 	}
 	free(buf->buf);
-	output_line(fd, buf);
+	line = output_line(fd, buf, line);
 	
 }
 
