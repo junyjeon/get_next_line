@@ -6,7 +6,7 @@
 /*   By: junyojeo <junyojeo@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/10 20:28:45 by junyojeo          #+#    #+#             */
-/*   Updated: 2022/08/10 20:56:18 by junyojeo         ###   ########.fr       */
+/*   Updated: 2022/09/05 17:30:15 by junyojeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <stdlib.h>
 
 typedef struct s_node{
+	struct t_node	*head;
 	struct t_node	*next;
 	ssize_t			read_size;
 	int				fd;

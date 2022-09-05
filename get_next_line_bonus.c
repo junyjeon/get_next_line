@@ -6,13 +6,33 @@
 /*   By: junyojeo <junyojeo@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/10 20:28:00 by junyojeo          #+#    #+#             */
-/*   Updated: 2022/08/29 22:08:13 by junyojeo         ###   ########.fr       */
+/*   Updated: 2022/09/05 17:49:40 by junyojeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-t_node	*ft_lstnew(int fd, t_node **node)
+char	*output_line(int fd, t_node *buf)
+{
+	int		i;
+	t_node	*tmp;
+	char *line
+	
+	if (!buf->buf || buf->buf[0] == '\0')
+	{
+		free(buf->buf);
+		buf->buf = 0;
+		return (NULL);
+	}
+	i = 0;
+	while (buf->buf[i] != '\n' && buf->buf[i])
+		i++;
+	if (buf-buf[i] == '\n')
+		i++;
+	line	ft_substr(buf->buf, 0, i);
+}
+
+t_node	*ft_lstnew(int fd, t_node *node)
 {
 	t_node	*element;
 
@@ -25,42 +45,45 @@ t_node	*ft_lstnew(int fd, t_node **node)
 	return (element);
 }
 
-int	check_fd(int fd, struct t_node **node);
+int	same_fd(int fd, struct t_node *node);
 {
-	while (*node)
-	{
-		if (fd == (*node)->fd)
-			return (1);
-		*node = (*node)->next;
-	}
-	node->next = ft_lstnew(fd, &node);
+	if (fd == node->fd)
+		return (1);
+	while (node)
+		node = node->next;
+	node->next = ft_lstnew(fd, node);
 	return (0);
 }
 
 char	*get_next_line(int fd)
 {
-	static t_node	*buf = {NULL, 0, 0, BUFFER_SIZE};
-	char	*tmp;
+	static t_node	*buf = {.next = NULL};
+	t_node			*tmp;
 
-	if (fd < 0, read(buf->fd, buf->buf, BUFFER_SIZE) == -1) 
+	if (fd < 0)
 		return (0);
 	while (1)
 	{
-		if (same_fd(fd, &buf))
-			break ;
-		// node->read_size = read(node->fd, node->buf, BUFFER_SIZE);
-		if (node.read_size == -1)
-			return (NULL);
-		else if (node.read_size == 0)
-			break ;
-		node.buf[node.read_size] = '\0';
-		tmp = lst;
-		lst = lst.buf()에 buf_join하기
-		lst_del()
 		buf->read_size = read(buf->fd, buf->buf, BUFFER_SIZE);
-		if (strchr(buf, '\n')
+		if (buf->read_size <= 0)
+			return (0);
+		buf->head = buf;
+		buf->buf[buf->read_size] = '\0';
+		if (same_fd(fd, buf->head))
+		{
+			buf->buf = (char *)malloc(1);
+			buf->buf[0] = '\0';
+		}
+		tmp = buf;
+		buf->buf = ft_strjoin(tmp->buf, buf->buf);
+		free(tmp);
+		lst_delete(tmp);
+		buf->read_size = read(buf->fd, buf->buf, BUFFER_SIZE);
+		if (ft_strchr(buf->buf, '\n')
 			break;
 	}
+	free(buf->buf);
+	output_line(fd, buf);
 	
 }
 
