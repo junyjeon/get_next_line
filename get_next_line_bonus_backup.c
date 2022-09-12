@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_bonus.c                              :+:      :+:    :+:   */
+/*   get_next_line_bonus_backup.c                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: junyojeo <junyojeo@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/10 20:28:00 by junyojeo          #+#    #+#             */
-/*   Updated: 2022/09/05 18:05:28 by junyojeo         ###   ########.fr       */
+/*   Updated: 2022/09/12 16:46:44 by junyojeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ t_node	*ft_lstnew(int fd, t_node *node)
 	return (element);
 }
 
-int	same_fd(int fd, struct t_node *node);
+int	same_fd(int fd, t_node *node)
 {
 	if (fd == node->fd)
 		return (1);

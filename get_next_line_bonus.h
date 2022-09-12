@@ -1,29 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line_bonus.h                              :+:      :+:    :+:   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: junyojeo <junyojeo@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/10 20:28:45 by junyojeo          #+#    #+#             */
-/*   Updated: 2022/09/05 17:30:15 by junyojeo         ###   ########.fr       */
+/*   Created: 2022/08/09 17:15:52 by junyojeo          #+#    #+#             */
+/*   Updated: 2022/08/10 20:23:37 by junyojeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_BONUS_H
-# define GET_NEXT_LINE_BONUS_H
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
 
-# include <sys/types.h>
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 1048576
+# endif
+
+# include <unistd.h>
 # include <stdlib.h>
-
-typedef struct s_node{
-	struct t_node	*head;
-	struct t_node	*next;
-	ssize_t			read_size;
-	int				fd;
-	char			buf[BUFFER_SIZE];
-}	t_node;
+# include <limits.h>
 
 char	*get_next_line(int fd);
+
+size_t	ft_strlen(const char *str);
+char	*ft_strchr(const char *s, int c);
+char	*ft_strdup(const char *s1);
+char	*ft_substr(char const *s, unsigned int start, size_t len);
+char	*ft_strjoin(char const *s1, char const *s2);
 
 #endif
