@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.h                                    :+:      :+:    :+:   */
+/*   get_next_line_bonus.h                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: junyojeo <junyojeo@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/09 17:15:52 by junyojeo          #+#    #+#             */
-/*   Updated: 2022/08/10 20:23:37 by junyojeo         ###   ########.fr       */
+/*   Created: 2022/09/16 00:18:27 by junyojeo          #+#    #+#             */
+/*   Updated: 2022/09/16 07:18:35 by junyojeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef GET_NEXT_LINE_H
-# define GET_NEXT_LINE_H
+#ifndef GET_NEXT_LINE_BONUS_H
+# define GET_NEXT_LINE_BONUS_H
 
 # ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 1048576
@@ -19,14 +19,19 @@
 
 # include <unistd.h>
 # include <stdlib.h>
-# include <limits.h>
 
-char	*get_next_line(int fd);
+typedef struct s_node
+{
+	struct s_node	*next;
+	int				fd;
+	char			*buf;
+}	t_node;
 
 size_t	ft_strlen(const char *str);
 char	*ft_strchr(const char *s, int c);
-char	*ft_strdup(const char *s1);
-char	*ft_substr(char const *s, unsigned int start, size_t len);
 char	*ft_strjoin(char const *s1, char const *s2);
+t_node	*ft_lstnew(int fd);
+void	clear_all(t_node **head, int fd);
+char	*get_next_line(int fd);
 
 #endif
