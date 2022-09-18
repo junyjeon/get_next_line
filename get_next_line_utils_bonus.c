@@ -6,7 +6,7 @@
 /*   By: junyojeo <junyojeo@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/16 00:20:08 by junyojeo          #+#    #+#             */
-/*   Updated: 2022/09/16 07:19:01 by junyojeo         ###   ########.fr       */
+/*   Updated: 2022/09/18 18:40:10 by junyojeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,11 @@ size_t	ft_strlen(const char *str)
 	size_t	i;
 
 	i = 0;
-	while (str[i])
-		i++;
+	if (str)
+	{
+		while (str[i])
+			i++;
+	}
 	return (i);
 }
 
@@ -43,19 +46,21 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	int		j;
 
 	src_len = (ft_strlen(s1) + ft_strlen(s2));
+	if (!s1 || !s2)
+		return (0);
 	str = (char *)malloc(sizeof(char) * (src_len + 1));
 	if (str == NULL)
 		return (0);
 	i = 0;
 	while (s1[i])
 	{
-		str[i] = *(char *)&s1[i];
+		str[i] = s1[i];
 		i++;
 	}
 	j = 0;
 	while (s2[j])
 	{
-		str[i] = *(char *)&s2[j];
+		str[i] = s2[j];
 		i++;
 		j++;
 	}
@@ -71,10 +76,12 @@ t_node	*ft_lstnew(int fd)
 	if (!elem)
 		return (0);
 	elem->next = NULL;
-	elem->fd = fd;
-	elem->buf = (char *)malloc(BUFFER_SIZE + 1);
+	elem->buf = malloc(1);
 	if (elem->buf)
 		return (0);
+	elem->buf[0] = '\0';
+	elem->fd = fd;
+	printf("%c", elem->buf[0]);
 	return (elem);
 }
 
