@@ -6,7 +6,7 @@
 /*   By: junyojeo <junyojeo@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/16 00:18:27 by junyojeo          #+#    #+#             */
-/*   Updated: 2022/09/16 07:18:35 by junyojeo         ###   ########.fr       */
+/*   Updated: 2022/09/18 17:13:35 by junyojeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,11 @@
 # define GET_NEXT_LINE_BONUS_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1048576
+#  define BUFFER_SIZE 1024
 # endif
 
 # include <unistd.h>
+# include <stdio.h>
 # include <stdlib.h>
 
 typedef struct s_node
