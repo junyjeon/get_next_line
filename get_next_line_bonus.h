@@ -6,7 +6,7 @@
 /*   By: junyojeo <junyojeo@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/16 00:18:27 by junyojeo          #+#    #+#             */
-/*   Updated: 2022/09/19 21:38:38 by junyojeo         ###   ########.fr       */
+/*   Updated: 2022/09/21 17:28:38 by junyojeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ char	*ft_strchr(const char *s, int c);
 char	*ft_substr(char const *s, unsigned int start, size_t len);
 char	*ft_strjoin(char const *s1, char const *s2);
 t_node	*ft_lstnew(int fd);
-void	clear_all(t_node **head, int fd, char *buf);
+void	clear_all(t_node *head, int fd, char *buf);
 char	*get_next_line(int fd);
 
 #endif

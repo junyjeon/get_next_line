@@ -6,7 +6,7 @@
 /*   By: junyojeo <junyojeo@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/16 00:20:08 by junyojeo          #+#    #+#             */
-/*   Updated: 2022/09/19 21:42:29 by junyojeo         ###   ########.fr       */
+/*   Updated: 2022/09/21 18:01:19 by junyojeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,11 +67,9 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	int		i;
 	int		j;
 
-	if(!s1)
-		s1 = "";
 	src_len = (ft_strlen(s1) + ft_strlen(s2));
 	str = (char *)malloc(sizeof(char) * (src_len + 1));
-	if (str == NULL)
+	if (!str)
 		return (0);
 	i = -1;
 	while (s1[++i])
@@ -95,35 +93,31 @@ t_node	*ft_lstnew(int fd)
 		return (0);
 	elem->next = NULL;
 	elem->buf = NULL;
+	elem->buf = malloc(1);
+	if (!elem->buf)
+		return (0);
+	elem->buf = "";
 	elem->fd = fd;
 	return (elem);
 }
 
-void	clear_all(t_node **head, int fd, char *buf)
+void	clear_all(t_node *head, int fd, char *buf)
 {
 	t_node	*prev;
-	t_node	*seek;
 
 	if (buf)
 		free(buf);
-	prev = NULL;
-	seek = *head;
-	if ((*head)->fd == fd)
+	prev = head;
+	head = head->next;
+	while (head)
 	{
-		seek = seek->next;
-		free(*head);
-		(*head) = seek;
-		return ;
-	}
-	while (seek)
-	{
-		if (seek->fd == fd)
+		if (head->fd == fd)
 		{
-			prev->next = seek->next;
-			free(seek);
+			prev->next = head->next;
+			free(head);
 			return ;
 		}
-		prev = seek;
-		seek = seek->next;
+		prev = head;
+		head = head->next;
 	}
 }

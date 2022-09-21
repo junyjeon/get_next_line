@@ -5,51 +5,55 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: junyojeo <junyojeo@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/12 21:01:32 by junyojeo          #+#    #+#             */
-/*   Updated: 2022/09/19 21:53:26 by junyojeo         ###   ########.fr       */
+/*   Created: 2022/09/21 15:22:15 by junyojeo          #+#    #+#             */
+/*   Updated: 2022/09/21 18:17:15 by junyojeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
-#include <stdio.h>
 
-static char	*buffer_join(int fd, char *buf, char *join)
+static char	*buffer_join(int fd, char *buf, char *str)
 {
 	ssize_t		read_len;
-	char		str[BUFFER_SIZE + 1];
+	char		*tmp;
 
 	while (1)
 	{
 		read_len = read(fd, str, BUFFER_SIZE);
+		if (read_len == -1)
+			return (0);
+		str[read_len] = '\0';
 		if (read_len == 0)
 			break ;
-		str[read_len] = '\0';
-		join = ft_strjoin(buf, str);
-		if (ft_strchr(join, '\n'))
+		tmp = buf;
+		buf = ft_strjoin(tmp, str);
+		free(tmp);
+		if (!buf)
+			return (0);
+		if (ft_strchr(str, '\n'))
 			break ;
 	}
-	return (join);
+	return (buf);
 }
 
-static char	*add_line(char *buf, char *line, char *join)
+static char	*add_line(char *buf, char *line)
 {
 	size_t	i;
-	size_t	join_len;
 	char	*tmp;
 
 	i = 0;
-	if (!join)
+	while (buf[i] && buf[i] != '\n')
+		i++;
+	if (buf[i] == '\n')
+		i++;
+	line = ft_substr(buf, 0, i);
+	if (!line)
 		return (0);
-	while (join[i] && join[i] != '\n')
-		i++;
-	if (join[i] == '\n')
-		i++;
-	join_len = ft_strlen(join) - i;
-	line = ft_substr(join, 0, i);
 	tmp = buf;
-	buf = ft_substr(join, i, join_len);
+	buf = ft_substr(buf, i, ft_strlen(buf) - i);
 	free(tmp);
-	buf[join_len] = '\0';
+	if (!buf)
+		return (0);
 	return (line);
 }
 
@@ -57,62 +61,48 @@ char	*get_next_line(int fd)
 {
 	static t_node	*head;
 	t_node			*node;
-	char			*join;
 	char			*line;
+	char			str[BUFFER_SIZE + 1];
 
-	if (fd < 0 && BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (0);
-	if (!head) 
+	if (!head)
+	{
 		head = ft_lstnew(fd);
+		if (!head)
+			return (0);
+	}
 	node = head;
-	join = NULL;
+	if (head->next)
+	{
+		while (node && fd != node->fd)
+			node = node->next;
+		if (!node)
+		{
+			node = ft_lstnew(fd);
+			if (!node)
+				return (0);
+		}
+	}
+	node->buf = buffer_join(fd, node->buf, str);
 	line = NULL;
-	while (node && fd != node->fd)
-		node = node->next;
-	if (!node)
-		node = ft_lstnew(fd);
-	join = buffer_join(fd, node->buf, join);
-	line = add_line(node->buf, line, join);
-	free(join);
-	if (!line)
-		clear_all(&head, fd, node->buf);
+	if (node->buf)
+		line = add_line(node->buf, line);
+	clear_all(head, fd, node->buf);
 	return (line);
 }
 
-#include <fcntl.h>
+// #include <fcntl.h>
+// #include <stdio.h>
+// int    main(void)
+// {
+//     int		fd;
+//     char	*line = NULL;
 
-int    main(void)
-{
-    int		fd;
-    char	*line = NULL;
-
-    fd = open("test2.txt", O_RDONLY);
-    // while ((line = (get_next_line(fd))))
-	for (int i = 0; i < 3; i++)
-	{
-		line = (get_next_line(fd));
-    	printf("line : %s\n", line);
-	}
-    free(line);
-}
-// int main() {
-// 	int	fd = open("test.txt", O_RDONLY);
-//    	int i = 0;
-// 	char* line;
-
-// 	while (i < )
+//     fd = open("test2.txt", O_RDONLY);
+// 	for (int i = 0; i < 3; i++)
 // 	{
-// 		line = get_next_line(fd);
-// 	printf("Gnl %d line : %s", i++, line);
-//     /*while (line == get_next_line(fd))		// 2
-//     {
-//     	printf("Gnl %d line : %s", i++, line);	
-//         free(line);				// 6	
-//     }*/
-//     printf("\n");
-
-//     free(line);					// 4
-// 	close(fd);				// 5
-	
-//     return (0);
+// 		line = (get_next_line(fd));
+//     	printf("line : %s\n", line);
+// 	}
 // }
