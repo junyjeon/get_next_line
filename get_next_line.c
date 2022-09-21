@@ -6,24 +6,26 @@
 /*   By: junyojeo <junyojeo@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/30 17:43:40 by junyojeo          #+#    #+#             */
-/*   Updated: 2022/09/16 05:23:43 by junyojeo         ###   ########.fr       */
+/*   Updated: 2022/09/21 18:14:12 by junyojeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*buf_read(int fd, int read_size, char *buf, char **save)
+char	*buf_read(int fd, char *buf, char **save)
 {
+	ssize_t		read_size;
 	char		*tmp;
 
 	while (1)
 	{
+		
 		read_size = read(fd, buf, BUFFER_SIZE);
 		if (read_size == -1)
 			return (NULL);
-		else if (read_size == 0)
-			break ;
 		buf[read_size] = '\0';
+		if (read_size <= 0)
+			break ;
 		if (!save[fd])
 		{
 			save[fd] = ft_strdup("");
@@ -38,7 +40,7 @@ char	*buf_read(int fd, int read_size, char *buf, char **save)
 	return (save[fd]);
 }
 
-char	*set_line_and_save(int fd, char **save, char *line)
+char	*idx_split(int fd, char **save, char *line)
 {
 	int			i;
 	char		*tmp;
@@ -69,20 +71,18 @@ char	*set_line_and_save(int fd, char **save, char *line)
 
 char	*get_next_line(int fd)
 {
-	int			read_size;
 	static char	*save[OPEN_MAX];
 	char		*buf;
 	char		*line;
 
-	read_size = 0;
 	line = NULL;
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buf)
 		return (NULL);
-	save[fd] = buf_read(fd, read_size, buf, save);
+	save[fd] = buf_read(fd, buf, save);
 	free(buf);
-	line = set_line_and_save(fd, save, line);
+	line = idx_split(fd, save, line);
 	return (line);
 }
