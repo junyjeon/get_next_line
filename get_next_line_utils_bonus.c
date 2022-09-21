@@ -6,7 +6,7 @@
 /*   By: junyojeo <junyojeo@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/16 00:20:08 by junyojeo          #+#    #+#             */
-/*   Updated: 2022/09/22 02:32:34 by junyojeo         ###   ########.fr       */
+/*   Updated: 2022/09/22 06:13:30 by junyojeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,11 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	char	*str;
 
 	s_len = ft_strlen(s);
-	// if (start >= s_len)
-	// 	return (ft_strdup(""));
+	if (start >= s_len)
+	{
+		str = malloc(1);
+		return (str);
+	}
 	i = 0;
 	while (s[start + i] && i < len)
 		i++;
@@ -54,7 +57,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	if (!str)
 		return (0);
 	i = -1;
-	while (len-- && s[start + (++i)])
+	while (++i < len && s[start + i])
 		str[i] = s[start + i];
 	str[i] = '\0';
 	return (str);
@@ -67,6 +70,8 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	int		i;
 	int		j;
 
+	if (s1)
+		s1 = "";
 	src_len = (ft_strlen(s1) + ft_strlen(s2));
 	str = (char *)malloc(sizeof(char) * (src_len + 1));
 	if (!str)
@@ -84,41 +89,34 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (str);
 }
 
-t_node	*ft_lstnew(int fd)
+t_node	*ft_lstnew(int fd, t_node *node, t_node *prev)
 {
 	t_node	*elem;
 
 	elem = (t_node *)malloc(sizeof(t_node));
 	if (!elem)
 		return (0);
+	prev->next = elem;
 	elem->next = NULL;
 	elem->buf = NULL;
-	elem->buf = malloc(1);
-	if (!elem->buf)
-		return (0);
-	elem->buf[0] = '\0';
 	elem->fd = fd;
 	return (elem);
 }
 
-void	clear_all(t_node *head, int fd, char *buf)
+void	remove_fd(int fd, t_node *node)
 {
 	t_node	*prev;
 
-	if (buf)
-		free(buf);
-	prev = head;
-	head = head->next;
-	while (head)
+	while (node)
 	{
-		if (head->fd == fd)
+		if (fd == node->fd)
 		{
-			prev->next = head->next;
-			free(head);
+			prev->next = node->next;
+			free(node);
 			return ;
 		}
-		prev = head;
-		head = head->next;
+		prev = node;
+		node = node->next;
 	}
 }
 
