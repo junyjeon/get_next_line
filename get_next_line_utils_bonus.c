@@ -6,7 +6,7 @@
 /*   By: junyojeo <junyojeo@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/16 00:20:08 by junyojeo          #+#    #+#             */
-/*   Updated: 2022/09/21 18:01:19 by junyojeo         ###   ########.fr       */
+/*   Updated: 2022/09/22 02:32:34 by junyojeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ t_node	*ft_lstnew(int fd)
 	elem->buf = malloc(1);
 	if (!elem->buf)
 		return (0);
-	elem->buf = "";
+	elem->buf[0] = '\0';
 	elem->fd = fd;
 	return (elem);
 }
@@ -121,3 +121,4 @@ void	clear_all(t_node *head, int fd, char *buf)
 		head = head->next;
 	}
 }
+

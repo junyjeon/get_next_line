@@ -6,7 +6,7 @@
 /*   By: junyojeo <junyojeo@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 15:22:15 by junyojeo          #+#    #+#             */
-/*   Updated: 2022/09/21 18:23:16 by junyojeo         ###   ########.fr       */
+/*   Updated: 2022/09/22 02:40:05 by junyojeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,9 +49,7 @@ static char	*add_line(char *buf, char *line)
 	line = ft_substr(buf, 0, i);
 	if (!line)
 		return (0);
-	tmp = buf;
 	buf = ft_substr(buf, i, ft_strlen(buf) - i);
-	free(tmp);
 	if (!buf)
 		return (0);
 	return (line);
@@ -85,28 +83,27 @@ char	*get_next_line(int fd)
 		}
 	}
 	node->buf = buffer_join(fd, node->buf, str);
-	line = 0;
-	if (node->buf)
-	{
-		line = add_line(node->buf, line);
-		if (!line)
-			return (0);
-	}
+	if (!node->buf)
+		return (0);
+	line = 0; 
+	line = add_line(node->buf, line);
+	if (!line)
+		return (0);
 	clear_all(head, fd, node->buf);
 	return (line);
 }
 
-// #include <fcntl.h>
-// #include <stdio.h>
-// int    main(void)
-// {
-//     int		fd;
-//     char	*line = NULL;
+#include <fcntl.h>
+#include <stdio.h>
+int    main(void)
+{
+    int		fd;
+    char	*line = NULL;
 
-//     fd = open("test2.txt", O_RDONLY);
-// 	for (int i = 0; i < 3; i++)
-// 	{
-// 		line = (get_next_line(fd));
-//     	printf("line : %s\n", line);
-// 	}
-// }
+    fd = open("test2.txt", O_RDONLY);
+	for (int i = 0; i < 3; i++)
+	{
+		line = (get_next_line(fd));
+    	printf("line : %s\n", line);
+	}
+}
