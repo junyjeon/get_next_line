@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
-#include <stdio.h>
 
 size_t	ft_strlen(const char *str)
 {	
@@ -90,7 +89,6 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		j++;
 	}
 	str[i] = '\0';
-	printf("str ft_strjoin: %s\n", str);
 	return (str);
 }
 

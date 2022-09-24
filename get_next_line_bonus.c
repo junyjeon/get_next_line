@@ -6,12 +6,12 @@
 /*   By: junyojeo <junyojeo@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/21 15:22:15 by junyojeo          #+#    #+#             */
-/*   Updated: 2022/09/24 09:59:39 by junyojeo         ###   ########.fr       */
+/*   Updated: 2022/09/24 10:05:02 by junyojeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
-#include <stdio.h>
+
 static char	*buffer_join(int fd, char *backup)
 {
 	ssize_t	read_len;
@@ -31,18 +31,12 @@ static char	*buffer_join(int fd, char *backup)
 		if (read_len == -1)
 			return (0);
 		buf[read_len] = '\0';
-		printf("buf buffer_join: %s\n", buf);
-		
-		printf("before join backup buffer_join: %s\n", backup);
 		tmp = backup;
 		backup = ft_strjoin(tmp, buf);
-		printf("backup malloced buffer_join: %p\n", backup);
-		printf("after join backup buffer_join: %s\n", backup);
 		free(tmp);
 		if (ft_strchr(buf, '\n'))
 			break ;
 	}
-	printf("final backup buffer_join: %s\n", backup);
 	free(buf);
 	return (backup);
 }
@@ -91,31 +85,36 @@ char	*get_next_line(int fd)
 	}
 	if (!node)
 		node = ft_lstnew(fd, prev);
-	printf("node get_next_line: %p\n", node);
-	printf("node->backup get_next_line: %p\n", node->backup);
 	node->backup = buffer_join(fd, node->backup);
-	printf("node->backup get_next_line: %p\n", node->backup);
 	line = add_line(node);
 	if (!node->backup)
 	{
 		prev->next = node->next;
 		free(node);
 	}
+	if (!line)
+		free(node->backup);
 	return (line);
 }
 
-// #include <fcntl.h>
+#include <fcntl.h>
+#include <stdio.h>
+int    main(void)
+{
+    int		fd, fd1, fd2;
+    char	*line = NULL;
 
-// int    main(void)
-// {
-//     int		fd;
-//     char	*line = NULL;
-
-//     fd = open("test.txt", O_RDONLY);
-// 	for (int i = 0; i < 3; i++)
-// 	{
-// 		line = (get_next_line(fd));
-//     	printf("line : %s", line);
-// 	}
-// 	free(line);
-// }
+    fd = open("test.txt", O_RDONLY);
+    fd1 = open("test.txt", O_RDONLY);
+    fd2 = open("test.txt", O_RDONLY);
+	for (int i = 0; i < 3; i++)
+	{
+		line = (get_next_line(fd));
+    	printf("line : %s", line);
+		line = (get_next_line(fd1));
+    	printf("line : %s", line);
+		line = (get_next_line(fd2));
+    	printf("line : %s", line);
+	}
+	free(line);
+}
