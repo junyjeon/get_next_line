@@ -6,7 +6,7 @@
 /*   By: junyojeo <junyojeo@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/16 00:20:08 by junyojeo          #+#    #+#             */
-/*   Updated: 2022/09/26 20:23:45 by junyojeo         ###   ########.fr       */
+/*   Updated: 2022/09/27 04:13:46 by junyojeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,32 +107,9 @@ t_node	*ft_lstnew(int fd, t_node **head)
 		elem->next = NULL;
 	}
 	else
+	{
 		elem->next = *head;
 		*head = elem; 
+	}
 	return (elem);
-}
-
-void	free_lst(t_node *head, int fd)
-{
-    t_node	*prev;
-    t_node	*seek;
-
-	seek = head;
-    if (head->fd == fd)
-    {
-		head = seek->next;
-		free(seek);
-        return ;
-    }
-    while (seek)
-    {
-        if (seek->fd == fd)
-        {
-            prev->next = seek->next;
-            free(seek);
-            return;
-        }
-        prev = seek;
-        seek = seek->next;
-    }
 }

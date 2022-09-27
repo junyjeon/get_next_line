@@ -6,7 +6,7 @@
 /*   By: junyojeo <junyojeo@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/30 17:43:40 by junyojeo          #+#    #+#             */
-/*   Updated: 2022/09/22 05:33:05 by junyojeo         ###   ########.fr       */
+/*   Updated: 2022/09/26 23:19:39 by junyojeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,38 +39,38 @@ char	*buf_read(int fd, char *buf, char *save)
 	return (save);
 }
 
-char	*split_idx(int fd, char **save, char *line)
+char	*split_idx(char **save, char *line)
 {
 	int			i;
 	char		*tmp;
 
-	if (!save[fd] || save[fd][0] == '\0')
+	if (!(*save) || (*save)[0] == '\0')
 	{
-		free(save[fd]);
-		save[fd] = 0;
+		free(*save);
+		*save = 0;
 		return (NULL);
 	}
 	i = 0;
-	while (save[fd][i] != '\n' && save[fd][i])
+	while ((*save)[i] != '\n' && (*save)[i])
 		i++;
-	if (save[fd][i] == '\n')
+	if ((*save)[i] == '\n')
 		i++;
-	line = ft_substr(save[fd], 0, i);
-	if (!save[fd][i])
+	line = ft_substr((*save), 0, i);
+	if (!(*save)[i])
 	{
-		free(save[fd]);
-		save[fd] = 0;
+		free(*save);
+		*save = 0;
 		return (line);
 	}
-	tmp = save[fd];
-	save[fd] = ft_substr(tmp, i, ft_strlen(save[fd]) - i);
+	tmp = *save;
+	*save = ft_substr(tmp, i, ft_strlen(*save) - i);
 	free(tmp);
 	return (line);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*save[OPEN_MAX];
+	static char	*save;
 	char		*buf;
 	char		*line;
 
@@ -80,9 +80,9 @@ char	*get_next_line(int fd)
 	buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buf)
 		return (NULL);
-	save[fd] = buf_read(fd, buf, save[fd]);
+	save = buf_read(fd, buf, save);
 	free(buf);
-	line = split_idx(fd, save, line);
+	line = split_idx(&save, line);
 	return (line);
 }
 
