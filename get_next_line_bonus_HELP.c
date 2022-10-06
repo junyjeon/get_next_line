@@ -115,35 +115,35 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-#include <fcntl.h>
-#include <stdio.h>
-int    main(void)
-{
-    int		fd[3];
-    char	*line = NULL;
+// #include <fcntl.h>
+// #include <stdio.h>
+// int    main(void)
+// {
+//     int		fd[3];
+//     char	*line = NULL;
 
-    fd[0] = open("test.txt", O_RDONLY);
-    fd[1] = open("test copy.txt", O_RDONLY);
-    fd[2] = open("test copy 2.txt", O_RDONLY);
-	for (int i = 0; i < 3; i++)
-	{
-		line = (get_next_line(fd[i]));
-    	printf("line : %s", line);
-		free(line);
-	}
-	for (int i = 0; i < 3; i++)
-	{
-		line = (get_next_line(fd[i]));
-    	printf("line : %s", line);
-		free(line);
-	}
-	for (int i = 0; i < 3; i++)
-	{
-		line = (get_next_line(fd[i]));
-    	printf("line : %s", line);
-		free(line);
-	}
-	//system("leaks a.out");
-	getchar();
-}
+//     fd[0] = open("test.txt", O_RDONLY);
+//     fd[1] = open("test copy.txt", O_RDONLY);
+//     fd[2] = open("test copy 2.txt", O_RDONLY);
+// 	for (int i = 0; i < 3; i++)
+// 	{
+// 		line = (get_next_line(fd[i]));
+//     	printf("line : %s", line);
+// 		free(line);
+// 	}
+// 	for (int i = 0; i < 3; i++)
+// 	{
+// 		line = (get_next_line(fd[i]));
+//     	printf("line : %s", line);
+// 		free(line);
+// 	}
+// 	for (int i = 0; i < 3; i++)
+// 	{
+// 		line = (get_next_line(fd[i]));
+//     	printf("line : %s", line);
+// 		free(line);
+// 	}
+// 	//system("leaks a.out");
+// 	getchar();
+// }
 
