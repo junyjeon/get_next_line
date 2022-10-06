@@ -6,13 +6,13 @@
 /*   By: junyojeo <junyojeo@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/30 17:43:40 by junyojeo          #+#    #+#             */
-/*   Updated: 2022/09/26 23:19:39 by junyojeo         ###   ########.fr       */
+/*   Updated: 2022/10/06 18:04:57 by junyojeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*buf_read(int fd, char *buf, char *save)
+static char	*buf_read(int fd, char *buf, char *save)
 {
 	ssize_t		read_size;
 	char		*tmp;
@@ -21,9 +21,9 @@ char	*buf_read(int fd, char *buf, char *save)
 	{
 		read_size = read(fd, buf, BUFFER_SIZE);
 		if (read_size == -1)
-			return (NULL);
+			return (0);
 		buf[read_size] = '\0';
-		if (read_size <= 0)
+		if (!read_size)
 			break ;
 		if (!save)
 		{
@@ -39,7 +39,7 @@ char	*buf_read(int fd, char *buf, char *save)
 	return (save);
 }
 
-char	*split_idx(char **save, char *line)
+static char	*split_idx(char **save, char *line)
 {
 	int			i;
 	char		*tmp;
@@ -47,8 +47,8 @@ char	*split_idx(char **save, char *line)
 	if (!(*save) || (*save)[0] == '\0')
 	{
 		free(*save);
-		*save = 0;
-		return (NULL);
+		*save = NULL;
+		return (0);
 	}
 	i = 0;
 	while ((*save)[i] != '\n' && (*save)[i])
@@ -59,7 +59,7 @@ char	*split_idx(char **save, char *line)
 	if (!(*save)[i])
 	{
 		free(*save);
-		*save = 0;
+		*save = NULL;
 		return (line);
 	}
 	tmp = *save;
@@ -74,10 +74,10 @@ char	*get_next_line(int fd)
 	char		*buf;
 	char		*line;
 
-	line = NULL;
+	line = 0;
 	if (fd < 0 || BUFFER_SIZE <= 0)
-		return (NULL);
-	buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
+		return (0);
+	buf = (char *)malloc(sizeof(char) * BUFFER_SIZE + 1);
 	if (!buf)
 		return (NULL);
 	save = buf_read(fd, buf, save);
@@ -85,15 +85,3 @@ char	*get_next_line(int fd)
 	line = split_idx(&save, line);
 	return (line);
 }
-
-// #include <fcntl.h>
-// #include <stdio.h>
-// int    main(void)
-// {
-//     int		fd;
-//     char	*line = NULL;
-
-//     fd = open("test2.txt", O_RDONLY);
-// 	line = (get_next_line(fd));
-//    	printf("line : %s\n", line);
-// }

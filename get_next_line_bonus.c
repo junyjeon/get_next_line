@@ -5,149 +5,80 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: junyojeo <junyojeo@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/21 15:22:15 by junyojeo          #+#    #+#             */
-/*   Updated: 2022/09/27 09:08:03 by junyojeo         ###   ########.fr       */
+/*   Created: 2022/10/06 14:36:06 by junyojeo          #+#    #+#             */
+/*   Updated: 2022/10/06 18:07:52 by junyojeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-static void	free_lst(t_node *head, int fd)
+static char	*buf_read(int fd, char *buf, char *save)
 {
-    t_node	*prev;
-    t_node	*seek;
+	ssize_t		read_size;
 
-	seek = head;
-    if (head->fd == fd)
-    {
-		head = seek->next;
-		free(head->backup);
-		free(seek);
-        return ;
-    }
-    while (seek)
-    {
-        if (seek->fd == fd)
-        {
-            prev->next = seek->next;
-			free(seek->backup);
-            free(seek);
-            return;
-        }
-        prev = seek;
-        seek = seek->next;
-    }
-}
-
-static char	*buffer_join(int fd, t_node *lst)
-{
-	ssize_t	read_len;
-	char	*tmp;
-	char	*buf;
-
-	buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (buf == NULL)
-		return (NULL);
-	read_len = read(fd, buf, BUFFER_SIZE);
-	while (read_len && read_len != -1)
+	while (1)
 	{
-		if (read_len == -1)
+		read_size = read(fd, buf, BUFFER_SIZE);
+		if (read_size == -1)
 			return (0);
-		buf[read_len] = '\0';
-		if (!lst->backup)
+		buf[read_size] = '\0';
+		if (!read_size)
+			break ;
+		if (!save)
 		{
-			lst->backup = (char *)malloc(1);
-			if (lst->backup == NULL)
-			{
-				free(buf);
-				return (NULL);
-			}
-			lst->backup[0] = '\0';
+			save = ft_strdup("");
+			save[0] = '\0';
 		}
-		tmp = lst->backup;
-		lst->backup = ft_strjoin(lst->backup, buf);
-		free(tmp);
-		tmp = 0;
-		// if (lst->backup == NULL)
-		// 	return (NULL);
+		save = ft_strjoin(save, buf);
 		if (ft_strchr(buf, '\n'))
 			break ;
-		read_len = read(fd, buf, BUFFER_SIZE);
 	}
-	free(buf);
-	return (lst->backup);
+	return (save);
 }
 
-static char	*add_line(t_node *lst, char *line)
+static char	*idx_split(int fd, char **save, char *line)
 {
-	size_t	i;
-	char	*tmp;
+	int			i;
+	char		*tmp;
 
+	if (!save[fd] || save[fd][0] == '\0')
+	{
+		free(save[fd]);
+		save[fd] = NULL;
+		return (NULL);
+	}
 	i = 0;
-	while (line[i] && line[i] != '\n')
+	while (save[fd][i] != '\n' && save[fd][i])
 		i++;
-	if (line[i] == '\n')
+	if (save[fd][i] == '\n')
 		i++;
-	tmp = lst->backup;
-	if (!tmp)
-		return (0);
-	line = ft_substr(lst->backup, 0, i);
-	lst->backup = ft_substr(lst->backup, i, ft_strlen(lst->backup) - i);
-	if (tmp)
-		free(tmp);
-	tmp = 0;
+	line = ft_substr(save[fd], 0, i);
+	if (!save[fd][i])
+	{
+		free(save[fd]);
+		save[fd] = NULL;
+		return (line);
+	}
+	tmp = save[fd];
+	save[fd] = ft_substr(save[fd], i, ft_strlen(save[fd]) - i);
+	free(tmp);
 	return (line);
 }
 
 char	*get_next_line(int fd)
 {
-	static t_node	*head;
-	t_node			*lst;
-	char			*tmp;
-	char			*line;
+	static char	*save[OPEN_MAX];
+	char		*buf;
+	char		*line;
 
-	lst = head;
-	while (lst && fd != lst->fd)
-		lst = lst->next;
-	if (!lst)
-		lst = ft_lstnew(fd, &head);
-	tmp = buffer_join(fd, lst);
 	line = NULL;
-	if (tmp)
-		line = add_line(lst, tmp);
-	if (!line && lst->backup)
-		free_lst(head, fd);
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (!buf)
+		return (NULL);
+	save[fd] = buf_read(fd, buf, save[fd]);
+	free(buf);
+	line = idx_split(fd, save, line);
 	return (line);
-}
-
-#include <fcntl.h>
-#include <stdio.h>
-int    main(void)
-{
-    int		fd[3];
-    char	*line = NULL;
-
-    fd[0] = open("test.txt", O_RDONLY);
-    fd[1] = open("test copy.txt", O_RDONLY);
-    fd[2] = open("test copy 2.txt", O_RDONLY);
-	for (int i = 0; i < 3; i++)
-	{
-		line = (get_next_line(fd[i]));
-    	printf("line : %s", line);
-		free(line);
-	}
-	for (int i = 0; i < 3; i++)
-	{
-		line = (get_next_line(fd[i]));
-    	printf("line : %s", line);
-		free(line);
-	}
-	for (int i = 0; i < 3; i++)
-	{
-		line = (get_next_line(fd[i]));
-    	printf("line : %s", line);
-		free(line);
-	}
-	//system("leaks a.out");
-	// getchar();
 }

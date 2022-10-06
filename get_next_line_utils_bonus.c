@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: junyojeo <junyojeo@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/09/16 00:20:08 by junyojeo          #+#    #+#             */
-/*   Updated: 2022/09/27 04:13:46 by junyojeo         ###   ########.fr       */
+/*   Created: 2022/07/30 17:44:50 by junyojeo          #+#    #+#             */
+/*   Updated: 2022/10/06 18:06:26 by junyojeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,27 +35,40 @@ char	*ft_strchr(const char *s, int c)
 	return (NULL);
 }
 
+char	*ft_strdup(const char *s1)
+{
+	int		s_len;
+	char	*dst;
+
+	if (!(*s1))
+	{
+		dst = (char *)malloc(1);
+		return (dst);
+	}
+	s_len = ft_strlen(s1);
+	dst = (char *)malloc(sizeof(char) * s_len + 1);
+	if (!dst)
+		return (0);
+	dst[s_len] = '\0';
+	while (s_len-- > 0)
+		*(dst++) = *(s1++);
+	return (dst);
+}
+
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
-	size_t	i;
-	size_t	s_len;
-	char	*str;
+	int				i;
+	unsigned int	s_len;
+	char			*str;
 
 	s_len = ft_strlen(s);
 	if (start >= s_len)
-	{
-		str = malloc(1);
-		*str = '\0';
-		return (str);
-	}
-	i = 0;
-	while (i < len && s[start + i])
-		i++;
-	str = (char *)malloc(sizeof(char) * (i + 1));
+		return (ft_strdup(""));
+	str = (char *)malloc(s_len + 1);
 	if (!str)
 		return (0);
 	i = 0;
-	while (i < len && s[start + i])
+	while (len-- && s[start + i])
 	{
 		str[i] = s[start + i];
 		i++;
@@ -64,7 +77,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 	return (str);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char *s1, char const *s2)
 {
 	char	*str;
 	int		src_len;
@@ -78,38 +91,17 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	i = 0;
 	while (s1[i])
 	{
-		str[i] = s1[i];
+		str[i] = *(char *)&s1[i];
 		i++;
 	}
 	j = 0;
 	while (s2[j])
 	{
-		str[i] = s2[j];
+		str[i] = *(char *)&s2[j];
 		i++;
 		j++;
 	}
 	str[i] = '\0';
+	free(s1);
 	return (str);
-}
-
-t_node	*ft_lstnew(int fd, t_node **head)
-{
-	t_node	*elem;
-
-	elem = (t_node *)malloc(sizeof(t_node));
-	if (!elem)
-		return (0);
-	elem->backup = NULL;
-	elem->fd = fd;
-	if (!(*head))
-	{
-		*head = elem;
-		elem->next = NULL;
-	}
-	else
-	{
-		elem->next = *head;
-		*head = elem; 
-	}
-	return (elem);
 }
