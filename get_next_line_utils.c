@@ -6,7 +6,7 @@
 /*   By: junyojeo <junyojeo@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/30 17:44:50 by junyojeo          #+#    #+#             */
-/*   Updated: 2022/10/06 17:36:13 by junyojeo         ###   ########.fr       */
+/*   Updated: 2023/01/08 14:15:33 by junyojeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,9 @@ size_t	ft_strlen(const char *str)
 	size_t	i;
 
 	i = 0;
-	while (str[i])
-		i++;
+	if (str)
+		while (str[i])
+			i++;
 	return (i);
 }
 
@@ -88,16 +89,19 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	str = (char *)malloc(sizeof(char) * (src_len + 1));
 	if (str == NULL)
 		return (0);
-	i = 0;
-	while (s1[i])
+	if (s1)
 	{
-		str[i] = *(char *)&s1[i];
-		i++;
+		i = 0;
+		while (s1[i])
+		{
+			str[i] = s1[i];
+			i++;
+		}
 	}
 	j = 0;
 	while (s2[j])
 	{
-		str[i] = *(char *)&s2[j];
+		str[i] = s2[j];
 		i++;
 		j++;
 	}

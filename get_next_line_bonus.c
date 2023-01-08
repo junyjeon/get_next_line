@@ -6,7 +6,7 @@
 /*   By: junyojeo <junyojeo@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/06 14:36:06 by junyojeo          #+#    #+#             */
-/*   Updated: 2022/10/06 18:07:52 by junyojeo         ###   ########.fr       */
+/*   Updated: 2023/01/08 14:14:47 by junyojeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ static char	*buf_read(int fd, char *buf, char *save)
 {
 	ssize_t		read_size;
 
+	if (save == NULL)
+		save = ft_strdup("");
 	while (1)
 	{
 		read_size = read(fd, buf, BUFFER_SIZE);
@@ -24,11 +26,6 @@ static char	*buf_read(int fd, char *buf, char *save)
 		buf[read_size] = '\0';
 		if (!read_size)
 			break ;
-		if (!save)
-		{
-			save = ft_strdup("");
-			save[0] = '\0';
-		}
 		save = ft_strjoin(save, buf);
 		if (ft_strchr(buf, '\n'))
 			break ;
