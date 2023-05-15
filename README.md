@@ -32,7 +32,7 @@ get_next_line
 
 ## 📍Overview
 
-The GitHub project get_next_line is a function that reads a single line from a file descriptor, allowing users to read data from a variety of sources one line at a time. It
+The GitHub project get_next_line is a function that reads a single line from a file descriptor, allowing users to read data from a variety of sources one line at a time.
 
 ## 🔮 Feautres
 
