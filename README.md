@@ -152,9 +152,7 @@ free(line);
 3. 정적 변수 효율적 관리
 
 ## 📚 참고 자료
-- [파일 디스크립터 이해하기](https://reakwon.tistory.com/81)
-- [정적 변수와 전역 변수의 차이](https://www.geeksforgeeks.org/static-variables-in-c/)
-- [read 함수 man page](https://man7.org/linux/man-pages/man2/read.2.html)
-- [GNL 테스터 모음](https://github.com/search?q=get_next_line+tester)
-- [메모리 누수 디버깅 가이드](https://velog.io/@junyjeon/leaks)
+- [파일 디스크립터](https://www.geeksforgeeks.org/input-output-system-calls-c-create-open-close-read-write)
+- [정적 변수](https://www.geeksforgeeks.org/static-variables-in-c)
+- [read 함수](https://man7.org/linux/man-pages/man2/read.2.html)
 - [Norminette 규칙](https://github.com/42School/norminette/blob/master/pdf/en.norm.pdf)
